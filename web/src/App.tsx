@@ -96,15 +96,36 @@ export default function App() {
   }
 
   return (
-    <div style={{ padding: 24, fontFamily: "system-ui", maxWidth: 900, margin: "0 auto" }}>
-      <h1>OpenEMR Patients</h1>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(160deg, #e8f1ff 0%, #f3f7ff 40%, #f8fbff 100%)",
+        padding: 20,
+        boxSizing: "border-box",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "system-ui",
+      }}
+    >
+      <div
+        style={{
+          width: "min(960px, 100%)",
+          background: "#ffffff",
+          border: "1px solid #dbe7ff",
+          borderRadius: 16,
+          boxShadow: "0 12px 28px rgba(30, 58, 138, 0.08)",
+          padding: 24,
+        }}
+      >
+      <h1 style={{ marginTop: 0, marginBottom: 20, fontSize: "clamp(1.6rem, 2.4vw, 2.1rem)" }}>OpenEMR Patients</h1>
 
       {/* Add Patient */}
       <div style={{ padding: 16, border: "1px solid #ddd", borderRadius: 10, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>Add patient</h2>
 
         <form onSubmit={addPatient} style={{ display: "grid", gap: 10 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
             <div>
               <label>First name</label>
               <input
@@ -125,7 +146,7 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
             <div>
               <label>DOB</label>
               <input
@@ -146,7 +167,7 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             <button type="submit" disabled={saving} style={{ padding: "8px 14px" }}>
               {saving ? "Saving..." : "Add"}
             </button>
@@ -171,7 +192,8 @@ export default function App() {
         <>
           <p style={{ opacity: 0.8 }}>Found: {patients.length}</p>
 
-          <table cellPadding={10} style={{ borderCollapse: "collapse", width: "100%", border: "1px solid #ddd" }}>
+          <div style={{ width: "100%", overflowX: "auto" }}>
+          <table cellPadding={10} style={{ borderCollapse: "collapse", width: "100%", minWidth: 620, border: "1px solid #ddd" }}>
             <thead>
               <tr style={{ background: "#f6f6f6" }}>
                 <th align="left">PID</th>
@@ -198,15 +220,17 @@ export default function App() {
               )}
             </tbody>
           </table>
+          </div>
 
-          <details style={{ marginTop: 16 }}>
+          {/* <details style={{ marginTop: 16 }}>
             <summary>Raw response (debug)</summary>
             <pre style={{ background: "#f6f6f6", padding: 16, borderRadius: 8, overflowX: "auto" }}>
               {JSON.stringify(payload, null, 2)}
             </pre>
-          </details>
+          </details> */}
         </>
       )}
+      </div>
     </div>
   );
 }

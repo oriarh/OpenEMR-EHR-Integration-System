@@ -1,16 +1,16 @@
 services:
   mysql:
     image: mariadb:10.6
-    restart: always
+    restart: unless-stopped
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
     volumes:
       - mysql_data:/var/lib/mysql
 
   openemr:
     image: openemr/openemr:latest
-    restart: always
+    restart: unless-stopped
     depends_on:
       - mysql
     ports:
@@ -18,13 +18,42 @@ services:
       - "9300:443"
     environment:
       MYSQL_HOST: mysql
-      MYSQL_ROOT_PASS: root
-      OE_USER: admin
-      OE_PASS: pass
+      MYSQL_ROOT_PASS: ${MYSQL_ROOT_PASSWORD:-root}
+      OE_USER: ${OPENEMR_ADMIN_USER:-admin}
+      OE_PASS: ${OPENEMR_ADMIN_PASS:-pass}
       # Optional: can toggle REST-related globals via env vars; you can still enable in UI.
       OPENEMR_SETTING_rest_api: "1"
     volumes:
       - sites_data:/var/www/localhost/htdocs/openemr/sites
+  
+  api:
+    build:
+      context: ../api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ../api/.env
+    environment:
+      PORT: 4000
+      OPENEMR_BASE: http://openemr
+      # If frontend is served from dockerized web (nginx) on localhost:80
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost,http://localhost:80,http://localhost:3000}
+    depends_on:
+      - openemr
+    expose:
+      - "4000"
+
+  web:
+    build:
+      context: ../web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "3000:80"
 
 volumes:
   mysql_data:

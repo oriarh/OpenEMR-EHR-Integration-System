@@ -13,9 +13,6 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
-    ports:
-      - "8300:80"
-      - "9300:443"
     environment:
       MYSQL_HOST: mysql
       MYSQL_ROOT_PASS: ${MYSQL_ROOT_PASSWORD:-root}
@@ -53,7 +50,7 @@ services:
     depends_on:
       - api
     ports:
-      - "3000:80"
+      - "80:80"
 
 volumes:
   mysql_data:

@@ -202,7 +202,7 @@ app.post("/patients", async (req, res) => {
   }
 });
 
-app.listen(PORT, "0.0.0.0",, () => {
+app.listen(PORT, () => {
   console.log(`API running on port ${PORT}`);
   console.log(`CORS_ORIGINS=${CORS_ORIGINS.join(",")}`);
   console.log(`OPENEMR_TOKEN_PATH=${TOKEN_PATH}`);
